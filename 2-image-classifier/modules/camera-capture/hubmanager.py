@@ -1,7 +1,10 @@
 import os
 import sys
 
-from iothub_client import IoTHubClient, IoTHubClientError, IoTHubTransportProvider
+import iothub_client
+from iothub_client import (IoTHubModuleClient, IoTHubClientError, IoTHubError,
+                           IoTHubMessage, IoTHubMessageDispositionResult,
+                           IoTHubTransportProvider)
 
 # messageTimeout - the maximum time in milliseconds until a message times out.
 # The timeout period starts at IoTHubClient.send_event_async.

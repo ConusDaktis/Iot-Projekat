@@ -5,7 +5,9 @@
 import time
 import sys
 import os
+import picamera
 import requests
+import io
 import json
 from azure.iot.device import IoTHubModuleClient, Message
 
@@ -28,15 +30,18 @@ def send_to_hub(strMessage):
 # Return the JSON response from the server with the prediction result
 def sendFrameForProcessing(imagePath, imageProcessingEndpoint):
     headers = {'Content-Type': 'application/octet-stream'}
-
-    with open(imagePath, mode="rb") as test_image:
-        try:
-            response = requests.post(imageProcessingEndpoint, headers = headers, data = test_image)
-            print("Response from classification service: (" + str(response.status_code) + ") " + json.dumps(response.json()) + "\n")
-        except Exception as e:
-            print(e)
-            print("No response from classification service")
-            return None
+	stream = io.BytesIO()
+    camera.capture(stream, format='jpeg')
+    stream.seek(0)
+    image = {'image': stream}
+	
+	try:
+		response = requests.post(imageProcessingEndpoint, headers = headers, files=image)
+		print("Response from classification service: (" + str(response.status_code) + ") " + json.dumps(response.json()) + "\n")
+	except Exception as e:
+		print(e)
+		print("No response from classification service")
+		return None
 
     return json.dumps(response.json())
 
@@ -63,6 +68,8 @@ def main(imagePath, imageProcessingEndpoint):
         print ( "IoT Edge module sample stopped" )
 
 if __name__ == '__main__':
+	camera = picamera.PiCamera()
+    stream_camera_data(camera)
     try:
         # Retrieve the image location and image classifying server endpoint from container environment
         IMAGE_PATH = os.getenv('IMAGE_PATH', "")

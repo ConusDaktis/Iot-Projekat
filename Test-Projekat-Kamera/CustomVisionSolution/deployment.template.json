@@ -73,8 +73,22 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "${MODULES.cameraCapture}",
-              "createOptions": "{\"Env\":[\"IMAGE_PATH=test_image.jpg\",\"IMAGE_PROCESSING_ENDPOINT=http://classifier/image\"]}"
+              "image": "${MODULES.cameraCapture.arm32v7}",
+              "createOptions": {
+                "HostConfig":{
+                  "Devices":[
+                    {
+                      "PathOnHost":"/dev/vchiq",
+                      "PathInContainer":"/dev/vchiq",
+                      "CgroupPermissions":"mrw"
+                    }
+                  ]
+                },
+                "Env":[
+                  "IMAGE_PATH=test_image.jpg",
+                  "IMAGE_PROCESSING_ENDPOINT=http://classifier/image"
+                  ]
+                }
             }
           }
         }
@@ -89,6 +103,11 @@
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
         }
+      }
+    },
+    "cameraCapture": {
+      "properties.desired": {
+        "ImageClassifyThreshold": 0.5
       }
     }
   }

@@ -19,7 +19,7 @@ class DisplayManager(object):
     def __andjela(self):
         W = Colors.White.value
         B = Colors.Blue.value
-		N = Colors.Nothing.value
+        N = Colors.Nothing.value
         logo = [
             N, N, N, N, N, N, N, N,
             N, N, N, B, B, N, N, N,
@@ -35,7 +35,7 @@ class DisplayManager(object):
     def __dusan(self):
         W = Colors.White.value
         B = Colors.Blue.value
-		N = Colors.Nothing.value
+        N = Colors.Nothing.value
         logo = [
             N, N, N, N, N, N, N, N,
             N, B, B, B, B, B, N, N,

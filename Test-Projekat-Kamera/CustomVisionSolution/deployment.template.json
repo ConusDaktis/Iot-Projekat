@@ -54,7 +54,7 @@
                 }
               }
             },
-            "Env":{
+            "Env": {
               "OptimizeForPerformance": {
                 "value": "false"
               }
@@ -80,24 +80,44 @@
             "settings": {
               "image": "${MODULES.cameraCapture.arm32v7}",
               "createOptions": {
-                "HostConfig":{
+                "HostConfig": {
                   "Binds": [
                     "/dev/vchiq:/dev/vchiq"
                   ],
-                  "Devices":[
+                  "Devices": [
                     {
-                      "PathOnHost":"/dev/vchiq",
-                      "PathInContainer":"/dev/vchiq",
-                      "CgroupPermissions":"mrw"
+                      "PathOnHost": "/dev/vchiq",
+                      "PathInContainer": "/dev/vchiq",
+                      "CgroupPermissions": "mrw"
                     }
                   ],
-                  "Priviledged":false
+                  "Priviledged": false
                 },
-                "Env":[
+                "Env": [
                   "IMAGE_PATH=picamera",
                   "IMAGE_PROCESSING_ENDPOINT=http://classifier/image"
-                  ]
+                ]
+              }
+            }
+          },
+          "senseHat": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "THRESHOLD": {"value": "0.5"}
+            },
+            "settings": {
+              "image": "${MODULES.senseHat}",
+              "createOptions": {
+                "HostConfig":{
+                  "Binds":[
+                    "/dev/i2c1:/dev/i2c1"
+                  ],
+                  "Privileged":true
                 }
+              }
             }
           }
         }
@@ -107,6 +127,7 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
+          "CameraCaptureToSenseHatDisplay": "FROM /messages/modules/cameraCapture/outputs/output1 INTO BrokeredEndpoint(\"/modules/senseHat/inputs/input1\")",
           "classifierToIoTHub": "FROM /messages/modules/classifier/outputs/* INTO $upstream",
           "cameraCaptureToIoTHub": "FROM /messages/modules/cameraCapture/outputs/* INTO $upstream"
         },

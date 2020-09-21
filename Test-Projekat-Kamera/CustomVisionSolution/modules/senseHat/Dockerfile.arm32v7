@@ -2,8 +2,6 @@ FROM balenalib/rpi-raspbian:stretch
 
 RUN [ "cross-build-start" ]
 
-WORKDIR /app
-
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libboost-python1.62.0 python3-pip libpython3-dev && \
     rm -rf /var/lib/apt/lists/* 

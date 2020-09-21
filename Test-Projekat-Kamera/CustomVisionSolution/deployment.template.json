@@ -105,16 +105,14 @@
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
-            "env": {
+            "Env": {
               "THRESHOLD": {"value": "0.5"}
             },
             "settings": {
               "image": "${MODULES.senseHat}",
               "createOptions": {
                 "HostConfig":{
-                  "Binds":[
-                    "/dev/i2c1:/dev/i2c1"
-                  ],
+                  "Binds":["/dev/i2c1:/dev/i2c1"],
                   "Privileged":true
                 }
               }

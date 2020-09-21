@@ -78,7 +78,7 @@ class DisplayManager(object):
         print("Displaying " + strImage)
         if 'andjela arsovic' in strImage.lower():
             self.__displayImage(self.__andjela())
-        elif 'dusan Stokic' in strImage.lower():
+        elif 'dusan stokic' in strImage.lower():
             self.__displayImage(self.__dusan())
         elif 'none' in strImage.lower():
             self.s.clear()

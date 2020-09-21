@@ -53,6 +53,11 @@
                   }
                 }
               }
+            },
+            "Env":{
+              "OptimizeForPerformance": {
+                "value": "false"
+              }
             }
           }
         },
@@ -76,16 +81,20 @@
               "image": "${MODULES.cameraCapture.arm32v7}",
               "createOptions": {
                 "HostConfig":{
+                  "Binds": [
+                    "/dev/vchiq:/dev/vchiq"
+                  ],
                   "Devices":[
                     {
                       "PathOnHost":"/dev/vchiq",
                       "PathInContainer":"/dev/vchiq",
                       "CgroupPermissions":"mrw"
                     }
-                  ]
+                  ],
+                  "Priviledged":false
                 },
                 "Env":[
-                  "IMAGE_PATH=test_image.jpg",
+                  "IMAGE_PATH=picamera",
                   "IMAGE_PROCESSING_ENDPOINT=http://classifier/image"
                   ]
                 }
@@ -98,6 +107,7 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
+          "classifierToIoTHub": "FROM /messages/modules/classifier/outputs/* INTO $upstream",
           "cameraCaptureToIoTHub": "FROM /messages/modules/cameraCapture/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {

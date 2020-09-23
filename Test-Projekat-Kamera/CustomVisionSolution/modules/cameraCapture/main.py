@@ -5,7 +5,6 @@
 import time
 import sys
 import os
-import picamera
 import requests
 import json
 
@@ -85,6 +84,7 @@ def main(imagePath, imageProcessingEndpoint):
             videostream = True
             imagePath = '/camframes/frame.jpg'
             res = (640,480)
+            import picamera
             print('picamera imported successfully')
             camera = picamera.PiCamera()
             print('picamera object created')

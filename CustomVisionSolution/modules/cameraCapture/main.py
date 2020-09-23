@@ -1,7 +1,3 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for
-# full license information.
-
 import time
 import sys
 import os
@@ -9,36 +5,31 @@ import requests
 import json
 
 import iothub_client
-# pylint: disable=E0611
 from iothub_client import IoTHubModuleClient, IoTHubClientError, IoTHubTransportProvider
 from iothub_client import IoTHubMessage, IoTHubMessageDispositionResult, IoTHubError
-# pylint: disable=E0401
 
-# messageTimeout - the maximum time in milliseconds until a message times out.
-# The timeout period starts at IoTHubModuleClient.send_event_async.
 MESSAGE_TIMEOUT = 10000
 
-# Choose HTTP, AMQP or MQTT as transport protocol.  
+# Biramo MQTT kao transport protokol.  
 PROTOCOL = IoTHubTransportProvider.MQTT
 
-# global counters
 SEND_CALLBACKS = 0
 
-# Send a message to IoT Hub
-# Route output1 to $upstream in deployment.template.json
+# Slanje poruke na IoT Hub
+# output1 saljemo na $upstream u deployment.template.json
 def send_to_hub(strMessage):
     message = IoTHubMessage(bytearray(strMessage, 'utf8'))
     hubManager.send_event_to_output("output1", message, 0)
 
-# Callback received when the message that we send to IoT Hub is processed.
+# Callback dobijen kada je poruka poslata na IoT Hub procesirana.
 def send_confirmation_callback(message, result, user_context):
     global SEND_CALLBACKS
     SEND_CALLBACKS += 1
     print ( "Confirmation received for message with result = %s" % result )
     print ( "   Total calls confirmed: %d \n" % SEND_CALLBACKS )
 
-# Send an image to the image classifying server
-# Return the JSON response from the server with the prediction result
+# slanje slike na image classifying server
+# Vraca JSON response sa servera sa rezultatom predikcije
 def sendFrameForProcessing(imagePath, imageProcessingEndpoint):
     headers = {'Content-Type': 'application/octet-stream'}
 
@@ -57,10 +48,10 @@ class HubManager(object):
         self.client_protocol = protocol
         self.client = IoTHubModuleClient()
         self.client.create_from_environment(protocol)
-        # set the time until a message times out
+        # postavljanje vremena do timeout-a
         self.client.set_option("messageTimeout", message_timeout)
 
-    # Sends a message to an output queue, to be routed by IoT Edge hub. 
+    # Slanje poruke na output. 
     def send_event_to_output(self, outputQueueName, event, send_context):
         self.client.send_event_async(
             outputQueueName, event, send_confirmation_callback, send_context)
@@ -90,7 +81,7 @@ def main(imagePath, imageProcessingEndpoint):
             print('picamera object created')
             camera.resolution = res
             camera.framerate = 24
-            time.sleep(2)
+            time.sleep(5)
             print('video stream')
 
         while True:
@@ -105,7 +96,6 @@ def main(imagePath, imageProcessingEndpoint):
 
 if __name__ == '__main__':
     try:
-        # Retrieve the image location and image classifying server endpoint from container environment
         IMAGE_PATH = os.getenv('IMAGE_PATH', "")
         IMAGE_PROCESSING_ENDPOINT = os.getenv('IMAGE_PROCESSING_ENDPOINT', "")
     except ValueError as error:

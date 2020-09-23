@@ -1,14 +1,9 @@
-# Copyright (c) Emmanuel Bertrand. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for
-# full license information.
-
 import os
 import random
 import time
 import sys
 import iothub_client
-# pylint: disable=E0611
-# Disabling linting that is not supported by Pylint for C extensions such as iothub_client. See issue https://github.com/PyCQA/pylint/issues/1955
+
 from iothub_client import IoTHubModuleClient, IoTHubClientError, IoTHubTransportProvider, IoTHubClientRetryPolicy
 from iothub_client import IoTHubMessage, IoTHubMessageDispositionResult, IoTHubError, DeviceMethodReturnValue
 import DisplayManager
@@ -18,9 +13,6 @@ from MessageParser import MessageParser
 import json
 
 RECEIVE_CALLBACKS = 0
-
-# receive_message_callback is invoked when an incoming message arrives on the specified  input queue
-
 
 def receive_message_callback(message, HubManager):
     global RECEIVE_CALLBACKS

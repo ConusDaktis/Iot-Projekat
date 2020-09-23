@@ -12,6 +12,7 @@ RUN apt-get update &&  apt-get install -y  --no-install-recommends\
         python3-pip \
         build-essential \
         libboost-python1.62.0 \
+        python3-pil \
         python3-picamera \
         python3-dev && \
         rm -rf /var/lib/apt/lists/*

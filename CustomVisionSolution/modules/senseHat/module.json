@@ -1,0 +1,17 @@
+{
+  "$schema-version": "0.0.1",
+  "description": "",
+  "image": {
+    "repository": "raspberrypidockeretf.azurecr.io/sensehat",
+    "tag": {
+      "version": "0.0.1",
+      "platforms": {
+        "arm32v7": "./Dockerfile.arm32v7",
+        "arm32v7.debug": "./Dockerfile.arm32v7.debug"
+      }
+    },
+    "buildOptions": [],
+    "contextPath": "./"
+  },
+  "language": "python"
+}

@@ -1,35 +1,30 @@
-#FROM balenalib/raspberrypi3-debian:stretch
-FROM balenalib/rpi-raspbian:stretch
+FROM balenalib/raspberrypi3:stretch
 
-RUN [ "cross-build-start" ]
-
-#WORKDIR /app
 ADD ./test_image1.jpg .
 ADD ./test_image2.jpg .
 
-RUN apt-get update &&  apt-get install -y  --no-install-recommends\
+RUN apt-get update && apt-get install -y --no-install-recommends\
         python3 \
         python3-pip \
         build-essential \
         libboost-python1.62.0 \
-        python3-pil \
         python3-picamera \
         python3-dev && \
         rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --upgrade pip
-RUN pip3 install --upgrade setuptools
+RUN pip3 install --upgrade pip 
+RUN pip install --upgrade setuptools 
 COPY requirements.txt ./
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
- 
-RUN useradd -ms /bin/bash moduleuser
-#adding the user to the video group
-RUN sudo usermod -a -G video moduleuser
-#create a folder where moduleuser can write to
-RUN mkdir /camframes
-RUN chmod 777 /camframes
-USER moduleuser
 
-ENTRYPOINT [ "python3", "-u", "./main.py" ]
+WORKDIR /home/pi
+RUN usermod -a -G video root
+RUN mkdir /capturedImage
+RUN chmod 777 /capturedImage
+ADD /app/ .
+RUN chmod +x main.py
+RUN chmod +x test_camera.py
+
+ENTRYPOINT [ "python3", "-u", "main.py" ]

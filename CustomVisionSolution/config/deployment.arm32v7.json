@@ -57,8 +57,23 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "raspberrypidockeretf.azurecr.io/cameracapture:0.0.1-arm32v7",
+              "image": "raspberrypidockeretf.azurecr.io/cameracapture:0.0.2-arm32v7",
               "createOptions": "{\"HostConfig\":{\"Binds\":[\"/dev/vchiq:/dev/vchiq\"],\"Devices\":[{\"PathOnHost\":\"/dev/vchiq\",\"PathInContainer\":\"/dev/vchiq\",\"CgroupPermissions\":\"mrw\"}],\"Priviledged\":false},\"Env\":[\"IMAGE_PATH=picamera\",\"IMAGE_PROCESSING_ENDPOINT=http://classifier/image\"]}"
+            }
+          },
+          "senseHat": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "Env": {
+              "THRESHOLD": {
+                "value": "0.5"
+              }
+            },
+            "settings": {
+              "image": "raspberrypidockeretf.azurecr.io/sensehat:0.0.1-arm32v7",
+              "createOptions": "{\"HostConfig\":{\"Binds\":[\"/dev/i2c1:/dev/i2c1\"],\"Privileged\":true}}"
             }
           }
         }
@@ -68,6 +83,7 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
+          "CameraCaptureToSenseHatDisplay": "FROM /messages/modules/cameraCapture/outputs/output1 INTO BrokeredEndpoint(\"/modules/senseHat/inputs/input1\")",
           "classifierToIoTHub": "FROM /messages/modules/classifier/outputs/* INTO $upstream",
           "cameraCaptureToIoTHub": "FROM /messages/modules/cameraCapture/outputs/* INTO $upstream"
         },
